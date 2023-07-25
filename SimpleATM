@@ -1,0 +1,186 @@
+import java.util.*;
+
+public class SimpleATM {
+    Scanner scan = new Scanner(System.in);
+
+    public static Map<Integer, Integer> pinAndBal = new HashMap<>();
+
+    public static Map<Integer, Integer> getPinAndBal() {
+        return pinAndBal;
+    }
+
+    public void optionsMenu() {
+        
+        System.out.println("ATM Machine");
+
+        pinAndBal.put(1111, 99999);
+
+        SimpleATM newMain = new SimpleATM();
+
+        while (true) {
+            System.out.println("Do you want to use?");
+            System.out.print("1 - Yes / 2 - No: ");
+            int option = scan.nextInt();
+
+            System.out.println();
+
+            if (option == 1) {
+                newMain.MainMenu();
+            }
+            else if (option == 2) {
+                System.out.print("Thank you for using!");
+                break;
+            }
+            else {
+                System.out.println("Invalid keyword! Please try again!");
+            }
+        }
+    }
+
+    public void MainMenu() {
+        
+        SimpleATM newMain = new SimpleATM();
+        
+        while (true) {
+            System.out.println("Select Option:");
+            System.out.println("1. Log in\n2. Add Account\n3. Quit");
+            System.out.print("Option: ");
+            int opt = scan.nextInt();
+
+            System.out.println();
+
+            if (opt == 1) {
+                newMain.LogIn();
+            }
+            else if (opt == 2) {
+                newMain.addAccount();
+            }
+            else if (opt == 3) {
+                System.out.print("Thank you for using!");
+                break;
+            }
+            else {
+                System.out.println("Invalid keyword! Please try again!");
+                newMain.optionsMenu();
+            }
+        }
+    }
+
+    public void addAccount() {
+        
+        SimpleATM newMain = new SimpleATM();
+
+        System.out.println("Add Account");
+        System.out.print("Enter 4-6 Digit Code: ");
+        int pin1 = scan.nextInt();
+
+        while (true) {
+            System.out.print("Re-enter the 4-6 Digit Code: ");
+            int pin2 = scan.nextInt();
+            System.out.println();
+
+            if (pin2 == pin1) {
+                System.out.print("Enter Initial Balance: ");
+                int initialBalance = scan.nextInt();
+                pinAndBal.put(pin1, initialBalance);
+                System.out.println("Account Added Successfully!");
+                System.out.println();
+                newMain.MainMenu();
+            }
+            else {
+                System.out.println("Pin code not match! Please try again!");
+            }
+        }
+    }
+
+    public void LogIn() {
+        
+        SimpleATM newMain = new SimpleATM();
+
+        while (true) {
+            System.out.println("Log in (Enter 0 to Back)");
+            System.out.print("Enter 4-6 Digit Pin Code: ");
+            int pin = scan.nextInt();
+
+            System.out.println();
+
+            if (pinAndBal.containsKey(pin)) {
+                System.out.println("Log in Success!");
+                System.out.println();
+                newMain.AccountMenu(pin);
+            }
+            else if (pin == 0) {
+                newMain.MainMenu();
+            }
+            else {
+                System.out.println("Invalid Code! Please try again!");
+                System.out.println();
+            }
+        }
+    }
+
+    public void AccountMenu(int pin) {
+
+        SimpleATM newMain = new SimpleATM();
+
+        while(true) {
+            int bal = pinAndBal.get(pin);
+            System.out.println("Your current balance is: " + bal);
+            System.out.println("Select Option:");
+            System.out.println("1. Withdraw\n2. Deposit\n3. Log Out");
+            System.out.print("Option: ");
+            int opt = scan.nextInt();
+
+            System.out.println();
+
+            if(opt == 1) {
+                System.out.println("There is 18 Pesos Charge Per Transaction");
+                System.out.print("Enter amount to be withdraw: ");
+                int amount = scan.nextInt();
+                int totalAmount = amount + 18;
+                int currentBalance = pinAndBal.getOrDefault(pin, 0);
+
+                if(currentBalance >= totalAmount) {
+                    pinAndBal.put(pin, currentBalance - totalAmount);
+                    System.out.println();
+                    System.out.println("Withdraw Success!");
+                    System.out.println("Your new balance is: " + pinAndBal.get(pin));
+                    System.out.println();
+                }
+
+                else {
+                    System.out.println("Insufficient balance! Please try again!");
+                    System.out.println();
+                }
+            }
+
+            else if (opt == 2) {
+                System.out.print("Enter amount to be deposited: ");
+                int depositAmount = scan.nextInt();
+                int currentBalance = pinAndBal.getOrDefault(pin, 0);
+                pinAndBal.put(pin, currentBalance + depositAmount);
+                System.out.println();
+                System.out.println("Deposit Successful! Your new balance is: " + pinAndBal.get(pin));
+                System.out.println();
+                newMain.optionsMenu();
+            }
+
+            else if (opt == 3) {
+                System.out.println("Thank you for using!");
+                System.out.println();
+                newMain.optionsMenu();
+            }
+
+            else {
+                System.out.println("Invalid keyword! Please try again!");
+            }
+        }
+    }
+
+    public static void main(String args[]) {
+        
+        SimpleATM newMain = new SimpleATM();
+        newMain.optionsMenu();
+        
+    }
+}
